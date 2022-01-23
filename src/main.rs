@@ -174,11 +174,11 @@ mod app {
             buffer[i] = c as u8;
         }
 
-        let transmit = ctx.local.lora.transmit_payload(buffer, message.len());
-        match transmit {
-            Ok(packet_size) => defmt::info!("Sent packet with size: {}", packet_size),
-            Err(e) => defmt::info!("Error: {:?}", e),
-        }
+        ctx.local
+            .lora
+            .transmit_payload(buffer, message.len())
+            .map(|e| defmt::info!("{:?}", e))
+            .unwrap();
 
         send::spawn_after(1.secs()).ok();
     }
