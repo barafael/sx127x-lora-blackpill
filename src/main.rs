@@ -33,48 +33,28 @@ pub fn exit() -> ! {
 #[rtic::app(device = stm32f4xx_hal::pac, dispatchers = [USART1])]
 mod app {
     use stm32f4xx_hal::{
-        delay::Delay,
-        gpio::{gpioa::PA0, gpioc::PC13, Edge, ExtiPin, Input, OpenDrain, Output, PullUp},
+        delay::{Delay, self},
+        gpio::{self, gpioa::PA0, gpioc::PC13, Edge, ExtiPin, Input, OpenDrain, Output, PullUp},
         pac::{self, SPI2},
         prelude::*,
-        spi::{Mode, Phase, Polarity, Spi},
+        spi::{self, Mode, Phase, Polarity, Spi},
         timer::{monotonic::MonoTimer, Timer},
     };
     use sx127x_lora::LoRa;
 
     type LoRaDriver = LoRa<
-        stm32f4xx_hal::spi::Spi<
+        spi::Spi<
             SPI2,
             (
-                stm32f4xx_hal::gpio::Pin<
-                    stm32f4xx_hal::gpio::Alternate<stm32f4xx_hal::gpio::PushPull, 5>,
-                    'B',
-                    13,
-                >,
-                stm32f4xx_hal::gpio::Pin<
-                    stm32f4xx_hal::gpio::Alternate<stm32f4xx_hal::gpio::PushPull, 5>,
-                    'B',
-                    14,
-                >,
-                stm32f4xx_hal::gpio::Pin<
-                    stm32f4xx_hal::gpio::Alternate<stm32f4xx_hal::gpio::PushPull, 5>,
-                    'B',
-                    15,
-                >,
+                gpio::Pin<gpio::Alternate<gpio::PushPull, 5>, 'B', 13>,
+                gpio::Pin<gpio::Alternate<gpio::PushPull, 5>, 'B', 14>,
+                gpio::Pin<gpio::Alternate<gpio::PushPull, 5>, 'B', 15>,
             ),
-            stm32f4xx_hal::spi::TransferModeBidi,
+            spi::TransferModeBidi,
         >,
-        stm32f4xx_hal::gpio::Pin<
-            stm32f4xx_hal::gpio::Output<stm32f4xx_hal::gpio::PushPull>,
-            'B',
-            12,
-        >,
-        stm32f4xx_hal::gpio::Pin<
-            stm32f4xx_hal::gpio::Output<stm32f4xx_hal::gpio::PushPull>,
-            'A',
-            8,
-        >,
-        stm32f4xx_hal::delay::Delay,
+        gpio::Pin<gpio::Output<gpio::PushPull>, 'B', 12>,
+        gpio::Pin<gpio::Output<gpio::PushPull>, 'A', 8>,
+        delay::Delay,
     >;
 
     #[monotonic(binds = TIM5, default = true)]
