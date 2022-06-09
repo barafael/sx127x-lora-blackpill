@@ -33,7 +33,7 @@ pub fn exit() -> ! {
 #[rtic::app(device = stm32f4xx_hal::pac, dispatchers = [USART1])]
 mod app {
     use stm32f4xx_hal::{
-        delay::{Delay, self},
+        delay::{self, Delay},
         gpio::{self, gpioa::PA0, gpioc::PC13, Edge, ExtiPin, Input, OpenDrain, Output, PullUp},
         pac::{self, SPI2},
         prelude::*,
